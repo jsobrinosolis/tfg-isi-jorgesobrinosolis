@@ -1,6 +1,13 @@
 package services;
 
 import entities.User;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.tools.DummyAgent.DummyAgent;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.StaleProxyException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +29,19 @@ public class UserService {
         int id = users.size()+1;
         user.setId(id);
         users.put(id, user);
+
+        DummyAgent dummyAgent = new DummyAgent();
+        Runtime rt = Runtime.instance();
+        Profile p = new ProfileImpl();
+        p.setParameter(Profile.GUI, "true");
+        AgentContainer container = rt.createMainContainer(p);
+        try{
+            AgentController ac = container.acceptNewAgent(user.getUsername(), dummyAgent);
+            ac.start();
+        }catch (StaleProxyException e){
+            e.printStackTrace();
+        }
+
         return user;
     }
 
