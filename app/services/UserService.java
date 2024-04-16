@@ -1,5 +1,6 @@
 package services;
 
+import agents.InformAgent;
 import entities.User;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -30,14 +31,13 @@ public class UserService {
         user.setId(id);
         users.put(id, user);
 
-        DummyAgent dummyAgent = new DummyAgent();
+        InformAgent informAgent = new InformAgent();
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
         p.setParameter(Profile.GUI, "true");
         AgentContainer container = rt.createMainContainer(p);
         try{
-            AgentController ac = container.acceptNewAgent(user.getUsername(), dummyAgent);
-            ac.start();
+            AgentController ac = container.acceptNewAgent(user.getUsername(), informAgent);
         }catch (StaleProxyException e){
             e.printStackTrace();
         }
