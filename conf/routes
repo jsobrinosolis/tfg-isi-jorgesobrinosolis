@@ -8,9 +8,79 @@ GET     /                           controllers.HomeController.index()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
+### NoDocs SWAGGER ###
+GET /docs/swagger-ui/*file       controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+
+### NoDocs ###
+GET   /api             controllers.Default.redirect(to="http://localhost:9000/docs/swagger-ui/index.html")
+
+
 # Basic User routes
+
+###
+#   summary: Get users
+#   responses:
+#       200:
+#           description: success
+#           content:
+#               application/json:
+#                   schema:
+#                       type: array
+#                       $ref: '#/definitions/entities.User'
+###
 GET     /user                       controllers.UserController.listUsers()
+
+###
+#   summary: Get an user identified by id
+#   responses:
+#       200:
+#           description: success
+#           content:
+#               application/json:
+#                   schema:
+#                       $ref: '#/definitions/entities.User'
+###
 GET     /user/:id                   controllers.UserController.retrieve(id:Int)
+
+ ###
+ #  summary: create an user
+ #  parameters:
+ #    - in: body
+ #      name: user
+ #      description: The user to create.
+ #      schema:
+ #         $ref: '#/definitions/entities.User'
+ #  responses:
+ #    201:
+ #      description: success
+ #      content:application/json:
+ #      schema:
+ #        $ref: '#/definitions/entities.User'
+ ###
 POST    /user                       controllers.UserController.create(request:Request)
+
+ ###
+ #  summary: modifies an user
+ #  parameters:
+ #    - in: body
+ #      name: user
+ #      description: The user to be modified.
+ #      schema:
+ #         $ref: '#/definitions/entities.User'
+ #  responses:
+ #    200:
+ #      description: success
+ #      content:application/json:
+ #      schema:
+ #        $ref: '#/definitions/entities.User'
+ ###
 PUT     /user                       controllers.UserController.update(request:Request)
+
+ ###
+ #  summary: deletes an user
+ #  responses:
+ #    200:
+ #      description: success
+ #      content:application/json:
+ ###
 DELETE  /user/:id                   controllers.UserController.delete(id:Int)

@@ -1,0 +1,16 @@
+---
+  swagger: "2.0"
+  info:
+    version: 1.0.0
+    title: "Users API"
+    description: "Manage your users"
+    license:
+      name: MIT
+  host: localhost:9000
+  basePath: /
+  schemes:
+      - "http"
+  consumes:
+    - application/json
+  produces: 
+    - application/json
