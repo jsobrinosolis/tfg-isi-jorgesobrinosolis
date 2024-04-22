@@ -6,9 +6,8 @@ import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 public class JadeUtil {
-/*
     private static volatile JadeUtil instance;
-    private AgentContainer container;
+    private jade.wrapper.AgentContainer container;
 
     private JadeUtil() {
         initializeJADEPlatform();
@@ -25,21 +24,23 @@ public class JadeUtil {
         return instance;
     }
 
-    private void initializeJADEPlatform() {
+    public AgentContainer initializeJADEPlatform() {
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
         p.setParameter(Profile.GUI, "true");
-        jade.wrapper.AgentContainer container = rt.createMainContainer(p);
+        container = rt.createMainContainer(p);
+        return (AgentContainer) container;
     }
 
-    public void addAgent(String agentName, Agent agent) {
+   /* public void addAgent(String agentName, Agent agent) {
         try {
             instance.initializeJADEPlatform();
             AgentController ac = container.createNewAgent("InformAgent", agent);
             ac.start();
+            System.out.println("Check");
         } catch (StaleProxyException e) {
             throw new RuntimeException(e);
         }
-    }
- */
+    }*/
+
 }
