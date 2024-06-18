@@ -1,12 +1,28 @@
 package utils;
 
+import agents.AuctioneerAgent;
 import jade.core.*;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
-import jade.wrapper.StaleProxyException;
+import jade.wrapper.ContainerController;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class JadeUtil {
-    private static volatile JadeUtil instance;
+
+    @Inject
+    public ContainerController JadeUtil(){
+        Runtime rt = Runtime.instance();
+        Profile p = new ProfileImpl();
+        p.setParameter(Profile.GUI, "true");
+        ContainerController container = rt.createAgentContainer(p);
+        return container;
+    }
+
+
+    /*private static volatile JadeUtil instance;
     private jade.wrapper.AgentContainer container;
 
     private JadeUtil() {
@@ -30,7 +46,7 @@ public class JadeUtil {
         p.setParameter(Profile.GUI, "true");
         container = rt.createMainContainer(p);
         return (AgentContainer) container;
-    }
+    }*/
 
    /* public void addAgent(String agentName, Agent agent) {
         try {

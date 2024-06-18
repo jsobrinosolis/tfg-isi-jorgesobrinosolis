@@ -19,7 +19,7 @@ public class AuctioneerAgent extends Agent {
         sd.setName(getLocalName());
         register(sd);
         System.out.println("Agent " + getLocalName() + " started.");
-        addBehaviour(new ManageAuctionBehaviour(this, 5000));
+        //addBehaviour(new ManageAuctionBehaviour(this, 5000));
     }
 
     private static class ManageAuctionBehaviour extends TickerBehaviour {
@@ -29,6 +29,7 @@ public class AuctioneerAgent extends Agent {
         private int standingBidPrice;
         private long lastBidReceived = 0;
         private final long TIMEOUT = 10000;
+        private MessageTemplate mt;
 
         public ManageAuctionBehaviour(Agent a, long period) {
             super(a, period);
@@ -36,9 +37,9 @@ public class AuctioneerAgent extends Agent {
         }
 
         public void onTick() {
-            MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
+            //MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
             ACLMessage bid = myAgent.receive(mt);
-            if (bid != null) {
+            if (bid != null && bid.getPerformative() == ACLMessage.PROPOSE) {
                 int proposedPrice = Integer.parseInt(bid.getContent());
                 if (standingBidBuyer == null || proposedPrice >= standingBidPrice) {
                     lastBidReceived = System.currentTimeMillis();
@@ -75,6 +76,7 @@ public class AuctioneerAgent extends Agent {
             System.out.println("Current winner: " + car.getStandingBidBuyer());
             ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
             // TODO implement Reply parameters
+            cfp.setConversationId("car-auction");
             cfp.setReplyWith(myAgent.getLocalName() + "cfp" + System.currentTimeMillis());
             cfp.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice() + "," + car.getStandingBidBuyer());
 
@@ -92,6 +94,7 @@ public class AuctioneerAgent extends Agent {
                 fe.printStackTrace();
             }
             myAgent.send(cfp);
+            mt = MessageTemplate.and(MessageTemplate.MatchConversationId("car-auction"),MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
         }
     }
 

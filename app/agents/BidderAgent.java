@@ -3,7 +3,7 @@ package agents;
 import entities.Car;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.SimpleBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -25,9 +25,32 @@ public class BidderAgent extends Agent {
         addBehaviour(new ReceiveInformBehaviour());
     }
 
-    private static class ReceiveInformBehaviour extends CyclicBehaviour {
+    /*private static class RegisterCar extends SimpleBehaviour {
+
+        private Car car;
+        public RegisterCar(Agent a, Car car){
+            super(a);
+            this.car = car;
+        }
+
+        @Override
         public void action() {
-            MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
+            //TODO: find auctioneers behaviour
+            ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+            msg.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice());
+        }
+
+        @Override
+        public boolean done() {
+            return false;
+        }
+    }*/
+
+    private static class ReceiveInformBehaviour extends CyclicBehaviour {
+
+        private MessageTemplate mt;
+        public void action() {
+            MessageTemplate mt = MessageTemplate.MatchConversationId("car-auction"); // Use Conversation ID or Auction ID
             ACLMessage msg = myAgent.receive(mt);
             if (msg != null) {
                 message = msg.getContent().split(","); //NOTA: para no implementar Serializable

@@ -84,3 +84,14 @@ PUT     /user                       controllers.UserController.update(request:Re
  #      content:application/json:
  ###
 DELETE  /user/:id                   controllers.UserController.delete(id:Int)
+
+ ###
+ #  summary: starts JADE platform and Auctioneer Agent
+ #  responses:
+ #    200:
+ #      description: success
+ #      content:text/plain:
+ #        schema:
+ #          type: string
+ ###
+GET  /start                         controllers.JadeController.start()
