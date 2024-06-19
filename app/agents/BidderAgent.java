@@ -22,7 +22,7 @@ public class BidderAgent extends Agent {
         sd.setName(getLocalName());
         register(sd);
         System.out.println("Agent "+ getLocalName()+ " started.");
-        addBehaviour(new ReceiveInformBehaviour());
+        //addBehaviour(new ReceiveInformBehaviour());
     }
 
     /*private static class RegisterCar extends SimpleBehaviour {

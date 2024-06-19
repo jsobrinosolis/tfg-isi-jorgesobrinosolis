@@ -9,7 +9,7 @@ import static play.mvc.Results.ok;
 
 public class JadeController {
     public Result start() {
-        ContainerController cc = JadeService.getInstance().startJade();
+        JadeService.getInstance().startJade();
         return ok(ApplicationUtil.createResponse("Platform started", true));
     }
 }

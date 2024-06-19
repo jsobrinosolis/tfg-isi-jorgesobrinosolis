@@ -20,7 +20,8 @@ import java.util.Set;
 public class UserService {
     private static UserService instance;
     private Map<Integer, User> users = new HashMap<>();
-    //private Map<User, Agent> user
+    private Map<Agent, User> agents = new HashMap<>();
+    private ContainerController containerController = JadeService.getInstance().getContainerController();
 
     public static UserService getInstance() {
         if (instance == null) {
@@ -33,6 +34,14 @@ public class UserService {
         int id = users.size()+1;
         user.setId(id);
         users.put(id, user);
+        BidderAgent bidderAgent = new BidderAgent();
+        agents.put(bidderAgent, user);
+        try {
+            AgentController ac = containerController.acceptNewAgent(user.getUsername(), bidderAgent);
+            ac.start();
+        } catch (StaleProxyException e){
+            e.printStackTrace();
+        }
 
         /*AuctioneerAgent auctioneerAgent = new AuctioneerAgent();
         BidderAgent bidderAgent = new BidderAgent();
