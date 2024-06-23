@@ -24,7 +24,7 @@ public class AuctioneerAgent extends Agent {
 
     private static class ManageAuctionBehaviour extends TickerBehaviour {
 
-        Car car = new Car("VW", "Golf", 1000);
+        Car car = new Car("VW", "Golf", 1000, 1);
         private AID standingBidBuyer;
         private int standingBidPrice;
         private long lastBidReceived = 0;

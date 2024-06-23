@@ -5,6 +5,8 @@ import jade.core.*;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
+import services.JadeService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,51 +14,33 @@ import javax.inject.Singleton;
 @Singleton
 public class JadeUtil {
 
-    @Inject
-    public ContainerController JadeUtil(){
-        Runtime rt = Runtime.instance();
-        Profile p = new ProfileImpl();
-        p.setParameter(Profile.GUI, "true");
-        ContainerController container = rt.createAgentContainer(p);
-        return container;
-    }
-
-
-    /*private static volatile JadeUtil instance;
-    private jade.wrapper.AgentContainer container;
-
-    private JadeUtil() {
-        initializeJADEPlatform();
-    }
+    private static JadeUtil instance;
+    private ContainerController containerController1;
 
     public static JadeUtil getInstance() {
         if (instance == null) {
-            synchronized (JadeUtil.class) {
-                if (instance == null) {
-                    instance = new JadeUtil();
-                }
-            }
+            instance = new JadeUtil();
         }
         return instance;
     }
 
-    public AgentContainer initializeJADEPlatform() {
+    @Inject
+    public JadeUtil(){
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
         p.setParameter(Profile.GUI, "true");
-        container = rt.createMainContainer(p);
-        return (AgentContainer) container;
-    }*/
-
-   /* public void addAgent(String agentName, Agent agent) {
-        try {
-            instance.initializeJADEPlatform();
-            AgentController ac = container.createNewAgent("InformAgent", agent);
+        containerController1 = rt.createAgentContainer(p);
+        AuctioneerAgent auctioneerAgent = new AuctioneerAgent();
+        try{
+            AgentController ac = containerController1.acceptNewAgent("Auctioneer", auctioneerAgent);
             ac.start();
-            System.out.println("Check");
-        } catch (StaleProxyException e) {
-            throw new RuntimeException(e);
+        }catch (StaleProxyException e){
+            e.printStackTrace();
         }
-    }*/
+    }
+
+    public ContainerController getContainerController(){
+        return containerController1;
+    }
 
 }

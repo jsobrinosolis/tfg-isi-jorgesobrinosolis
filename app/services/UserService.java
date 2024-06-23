@@ -1,16 +1,12 @@
 package services;
 
-import agents.AuctioneerAgent;
 import agents.BidderAgent;
 import entities.User;
-import jade.core.Agent;
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.core.Runtime;
-import jade.wrapper.AgentContainer;
+import jade.core.behaviours.SimpleBehaviour;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import utils.JadeUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,8 +16,8 @@ import java.util.Set;
 public class UserService {
     private static UserService instance;
     private Map<Integer, User> users = new HashMap<>();
-    private Map<Agent, User> agents = new HashMap<>();
-    private ContainerController containerController = JadeService.getInstance().getContainerController();
+    private Map<User, BidderAgent> agents = new HashMap<>();
+    private ContainerController containerController = JadeUtil.getInstance().getContainerController();
 
     public static UserService getInstance() {
         if (instance == null) {
@@ -35,7 +31,7 @@ public class UserService {
         user.setId(id);
         users.put(id, user);
         BidderAgent bidderAgent = new BidderAgent();
-        agents.put(bidderAgent, user);
+        agents.put(user, bidderAgent);
         try {
             AgentController ac = containerController.acceptNewAgent(user.getUsername(), bidderAgent);
             ac.start();
@@ -85,5 +81,13 @@ public class UserService {
 
     public boolean deleteUser(int id) {
         return users.remove(id) != null;
+    }
+
+    public Map<Integer, User> getUsers() {
+        return users;
+    }
+
+    public Map<User, BidderAgent> getAgents() {
+        return agents;
     }
 }

@@ -95,3 +95,20 @@ DELETE  /user/:id                   controllers.UserController.delete(id:Int)
  #          type: string
  ###
 GET  /start                         controllers.JadeController.start()
+
+ ###
+ #  summary: register a car
+ #  parameters:
+ #    - in: body
+ #      name: car
+ #      description: The car to register.
+ #      schema:
+ #         $ref: '#/definitions/entities.Car'
+ #  responses:
+ #    201:
+ #      description: success
+ #      content:application/json:
+ #      schema:
+ #        $ref: '#/definitions/entities.Car'
+ ###
+POST    /car                       controllers.CarController.register(request:Request)

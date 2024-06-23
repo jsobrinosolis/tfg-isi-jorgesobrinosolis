@@ -3,18 +3,24 @@ package entities;
 import jade.core.AID;
 
 public class Car {
+
+    private int id;
     private String brand;
     private String model;
     private int currentPrice;
     private AID standingBidBuyer;
-    private String status;
+    private int sellerID;
 
-    public Car (String brand, String model, int startingPrice){
+    public Car (String brand, String model, int startingPrice, int sellerID){
         this.brand = brand;
         this.model = model;
         this.currentPrice = startingPrice;
-        this.status = "new";
+        this.sellerID = sellerID;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String getBrand() {
         return brand;
@@ -48,11 +54,11 @@ public class Car {
         this.standingBidBuyer = standingBidBuyer;
     }
 
-    public String getStatus() {
-        return status;
+    public int getSellerID() {
+        return sellerID;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSellerID(int sellerID) {
+        this.sellerID = sellerID;
     }
 }
