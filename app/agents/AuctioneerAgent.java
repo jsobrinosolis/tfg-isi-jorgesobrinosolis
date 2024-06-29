@@ -1,9 +1,8 @@
 package agents;
 
 import entities.Car;
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -11,7 +10,11 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
+import java.util.ArrayList;
+
 public class AuctioneerAgent extends Agent {
+
+    public ArrayList<Car> auctionLedger = new ArrayList<>();
 
     protected void setup() {
         ServiceDescription sd = new ServiceDescription();
@@ -19,82 +22,27 @@ public class AuctioneerAgent extends Agent {
         sd.setName(getLocalName());
         register(sd);
         System.out.println("Agent " + getLocalName() + " started.");
+        addBehaviour(new HandleCarRegistrationBehaviour());
         //addBehaviour(new ManageAuctionBehaviour(this, 5000));
     }
 
-    private static class ManageAuctionBehaviour extends TickerBehaviour {
+    private class HandleCarRegistrationBehaviour extends CyclicBehaviour {
 
-        Car car = new Car("VW", "Golf", 1000, 1);
-        private AID standingBidBuyer;
-        private int standingBidPrice;
-        private long lastBidReceived = 0;
-        private final long TIMEOUT = 10000;
-        private MessageTemplate mt;
-
-        public ManageAuctionBehaviour(Agent a, long period) {
-            super(a, period);
-            CallForBids(car);
-        }
-
-        public void onTick() {
-            //MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
-            ACLMessage bid = myAgent.receive(mt);
-            if (bid != null && bid.getPerformative() == ACLMessage.PROPOSE) {
-                int proposedPrice = Integer.parseInt(bid.getContent());
-                if (standingBidBuyer == null || proposedPrice >= standingBidPrice) {
-                    lastBidReceived = System.currentTimeMillis();
-                    standingBidPrice = proposedPrice;
-                    car.setCurrentPrice(standingBidPrice);
-                    standingBidBuyer = bid.getSender();
-                    car.setStandingBidBuyer(standingBidBuyer);
-                    bid = myAgent.receive(mt);
-                    while (bid != null) {
-                        if (standingBidPrice < Integer.parseInt(bid.getContent())) {
-                            lastBidReceived = System.currentTimeMillis();
-                            standingBidPrice = Integer.parseInt(bid.getContent());
-                            car.setCurrentPrice(standingBidPrice);
-                            standingBidBuyer = bid.getSender();
-                            car.setStandingBidBuyer(standingBidBuyer);
-                        }
-                        bid = myAgent.receive(mt);
-                    }
-                    CallForBids(car);
-                }
-            } else if (System.currentTimeMillis() - lastBidReceived > TIMEOUT){
-                System.out.println("Auction ended, " + standingBidBuyer + " won.");
-                ACLMessage acceptBid = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-                acceptBid.addReceiver(standingBidBuyer);
-                acceptBid.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice());
-                myAgent.send(acceptBid);
-                stop();
+        @Override
+        public void action() {
+            MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),MessageTemplate.MatchConversationId("register-car"));
+            ACLMessage request = myAgent.receive(mt);
+            if (request != null){
+                String[] content = request.getContent().split(",");
+                auctionLedger.add(new Car(content[0], content[1], Integer.parseInt(content[2].trim()), Integer.parseInt(content[3].trim())));
+                ACLMessage reply = request.createReply();
+                reply.setPerformative(ACLMessage.CONFIRM);
+                reply.setConversationId("register-car");
+                reply.setContent(content[0] + " " + content[1] + " successfully registered for auction");
+                myAgent.send(reply);
             } else {
-                CallForBids(car);
+                block();
             }
-        }
-
-        private void CallForBids(Car car){
-            System.out.println("Current winner: " + car.getStandingBidBuyer());
-            ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-            // TODO implement Reply parameters
-            cfp.setConversationId("car-auction");
-            cfp.setReplyWith(myAgent.getLocalName() + "cfp" + System.currentTimeMillis());
-            cfp.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice() + "," + car.getStandingBidBuyer());
-
-            DFAgentDescription template = new DFAgentDescription();
-            ServiceDescription sd = new ServiceDescription();
-            sd.setType("bidder");
-            template.addServices(sd);
-
-            try {
-                DFAgentDescription[] result = DFService.search(myAgent, template);
-                for (DFAgentDescription dfd : result) {
-                    cfp.addReceiver(dfd.getName());
-                }
-            } catch (FIPAException fe) {
-                fe.printStackTrace();
-            }
-            myAgent.send(cfp);
-            mt = MessageTemplate.and(MessageTemplate.MatchConversationId("car-auction"),MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
         }
     }
 

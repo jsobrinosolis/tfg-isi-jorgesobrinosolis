@@ -2,7 +2,6 @@ package services;
 
 import agents.BidderAgent;
 import entities.User;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
@@ -15,9 +14,9 @@ import java.util.Set;
 
 public class UserService {
     private static UserService instance;
-    private Map<Integer, User> users = new HashMap<>();
-    private Map<User, BidderAgent> agents = new HashMap<>();
-    private ContainerController containerController = JadeUtil.getInstance().getContainerController();
+    private static Map<Integer, User> users = new HashMap<>();
+    private static Map<User, BidderAgent> agents = new HashMap<>();
+    private ContainerController containerController = JadeUtil.getContainerController();
 
     public static UserService getInstance() {
         if (instance == null) {
@@ -35,6 +34,7 @@ public class UserService {
         try {
             AgentController ac = containerController.acceptNewAgent(user.getUsername(), bidderAgent);
             ac.start();
+            //bidderAgent.addBehaviour(new Prueba("Adios"));
         } catch (StaleProxyException e){
             e.printStackTrace();
         }

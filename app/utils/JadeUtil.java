@@ -6,7 +6,6 @@ import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import services.JadeService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,8 +13,8 @@ import javax.inject.Singleton;
 @Singleton
 public class JadeUtil {
 
-    private static JadeUtil instance;
-    private ContainerController containerController1;
+    private static JadeUtil instance = null;
+    private static ContainerController containerController1;
 
     public static JadeUtil getInstance() {
         if (instance == null) {
@@ -37,9 +36,10 @@ public class JadeUtil {
         }catch (StaleProxyException e){
             e.printStackTrace();
         }
+        instance = this;
     }
 
-    public ContainerController getContainerController(){
+    public static ContainerController getContainerController(){
         return containerController1;
     }
 
