@@ -6,10 +6,11 @@ import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 import services.CarService;
+import services.UserService;
 import utils.ApplicationUtil;
 
-import static play.mvc.Results.badRequest;
-import static play.mvc.Results.created;
+import static play.mvc.Results.*;
+import static play.mvc.Results.ok;
 
 public class CarController {
     public Result register(Http.Request request) {
@@ -20,5 +21,13 @@ public class CarController {
         Car car = CarService.getInstance().addCar(Json.fromJson(json, Car.class));
         JsonNode jsonObject = Json.toJson(car);
         return created(ApplicationUtil.createResponse(jsonObject, true));
+    }
+
+    public Result auction(int id) {
+        if (CarService.getInstance().auctionCar(id) == null) {
+            return notFound(ApplicationUtil.createResponse("Car with id:" + id + " not found", false));
+        }
+        JsonNode jsonObjects = Json.toJson(CarService.getInstance().auctionCar(id));
+        return ok(ApplicationUtil.createResponse(jsonObjects, true));
     }
 }

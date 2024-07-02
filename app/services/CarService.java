@@ -34,7 +34,14 @@ public class CarService {
         return car;
     }
 
-    public Car getCar(int id){
+    public Car auctionCar(int id){
+        JadeUtil.getAuctioneer().addBehaviour(new OneShotBehaviour() {
+            @Override
+            public void action() {
+                System.out.println("Prueba auctioneer desde CarService");
+            }
+        });
+
         return cars.get(id);
     }
 }

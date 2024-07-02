@@ -14,7 +14,8 @@ import javax.inject.Singleton;
 public class JadeUtil {
 
     private static JadeUtil instance = null;
-    private static ContainerController containerController1;
+    private static ContainerController containerController;
+    private static AuctioneerAgent auctioneerAgent;
 
     public static JadeUtil getInstance() {
         if (instance == null) {
@@ -28,10 +29,10 @@ public class JadeUtil {
         Runtime rt = Runtime.instance();
         Profile p = new ProfileImpl();
         p.setParameter(Profile.GUI, "true");
-        containerController1 = rt.createAgentContainer(p);
-        AuctioneerAgent auctioneerAgent = new AuctioneerAgent();
+        containerController = rt.createAgentContainer(p);
+        auctioneerAgent = new AuctioneerAgent();
         try{
-            AgentController ac = containerController1.acceptNewAgent("Auctioneer", auctioneerAgent);
+            AgentController ac = containerController.acceptNewAgent("auctioneer", auctioneerAgent);
             ac.start();
         }catch (StaleProxyException e){
             e.printStackTrace();
@@ -40,7 +41,9 @@ public class JadeUtil {
     }
 
     public static ContainerController getContainerController(){
-        return containerController1;
+        return containerController;
     }
+
+    public static AuctioneerAgent getAuctioneer() {return auctioneerAgent;}
 
 }

@@ -65,7 +65,6 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
     private void CallForBids(Car car){
         System.out.println("Current winner: " + car.getStandingBidBuyer());
         ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-        // TODO implement Reply parameters
         cfp.setConversationId("car-auction");
         cfp.setReplyWith(myAgent.getLocalName() + "cfp" + System.currentTimeMillis());
         cfp.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice() + "," + car.getStandingBidBuyer());

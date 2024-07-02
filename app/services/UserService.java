@@ -1,6 +1,7 @@
 package services;
 
 import agents.BidderAgent;
+import agents.behaviours.BidSubmissionBehaviour;
 import entities.User;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
@@ -34,31 +35,10 @@ public class UserService {
         try {
             AgentController ac = containerController.acceptNewAgent(user.getUsername(), bidderAgent);
             ac.start();
-            //bidderAgent.addBehaviour(new Prueba("Adios"));
+            bidderAgent.addBehaviour(new BidSubmissionBehaviour(user.getBudget()));
         } catch (StaleProxyException e){
             e.printStackTrace();
         }
-
-        /*AuctioneerAgent auctioneerAgent = new AuctioneerAgent();
-        BidderAgent bidderAgent = new BidderAgent();
-        BidderAgent bidderAgent2 = new BidderAgent();
-        BidderAgent bidderAgent3 = new BidderAgent();
-        Runtime rt = Runtime.instance();
-        Profile p = new ProfileImpl();
-        ContainerController container = rt.createAgentContainer(p);
-        try{
-            AgentController ac = container.acceptNewAgent("Auctioneer", auctioneerAgent);
-            ac.start();
-            AgentController ac1 = container.acceptNewAgent("Usuario", bidderAgent);
-            ac1.start();
-            AgentController ac2 = container.acceptNewAgent("Usuario2", bidderAgent2);
-            ac2.start();
-            AgentController ac3 = container.acceptNewAgent("Usuario3", bidderAgent3);
-            ac3.start();
-        }catch (StaleProxyException e){
-            e.printStackTrace();
-        }*/
-
         return user;
     }
 

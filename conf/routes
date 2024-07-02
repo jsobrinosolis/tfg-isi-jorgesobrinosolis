@@ -101,3 +101,12 @@ DELETE  /user/:id                   controllers.UserController.delete(id:Int)
  #        $ref: '#/definitions/entities.Car'
  ###
 POST    /car                       controllers.CarController.register(request:Request)
+
+###
+ #  summary: deletes a car
+ #  responses:
+ #    200:
+ #      description: success
+ #      content:application/json:
+ ###
+DELETE     /car/:id                   controllers.CarController.auction(id:Int)

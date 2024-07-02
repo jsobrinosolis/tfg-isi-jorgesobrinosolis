@@ -7,6 +7,7 @@ public class User {
     private int id;
     private String username;
     private String password;
+    private int budget;
 
     public int getId() { return id; }
 
@@ -28,4 +29,11 @@ public class User {
         this.password = password;
     }
 
+    public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
 }

@@ -38,7 +38,7 @@ public class AuctioneerAgent extends Agent {
                 ACLMessage reply = request.createReply();
                 reply.setPerformative(ACLMessage.CONFIRM);
                 reply.setConversationId("register-car");
-                reply.setContent(content[0] + " " + content[1] + " successfully registered for auction");
+                reply.setContent("Contenido reply: " + content[0] + " " + content[1] + " successfully registered for auction");
                 myAgent.send(reply);
             } else {
                 block();
