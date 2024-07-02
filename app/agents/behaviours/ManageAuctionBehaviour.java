@@ -56,7 +56,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
             acceptBid.addReceiver(standingBidBuyer);
             acceptBid.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice());
             myAgent.send(acceptBid);
-            informLosers();
+            informLosers(standingBidBuyer);
             stop();
         } else {
             CallForBids(car);
@@ -87,7 +87,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
         mt = MessageTemplate.and(MessageTemplate.MatchConversationId("car-auction"),MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
     }
 
-    private void informLosers(){
+    private void informLosers(AID winner){
         ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
         inform.setConversationId("car-auction");
         DFAgentDescription template = new DFAgentDescription();
@@ -98,7 +98,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
         try {
             DFAgentDescription[] result = DFService.search(myAgent, template);
             for (DFAgentDescription dfd : result) {
-                if(dfd.getName() != standingBidBuyer){
+                if(dfd.getName() != winner){
                     inform.addReceiver(dfd.getName());
                 }
             }
