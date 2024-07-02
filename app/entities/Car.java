@@ -10,12 +10,14 @@ public class Car {
     private int currentPrice;
     private AID standingBidBuyer;
     private int sellerID;
+    private String status;
 
     public Car (String brand, String model, int startingPrice, int sellerID){
         this.brand = brand;
         this.model = model;
         this.currentPrice = startingPrice;
         this.sellerID = sellerID;
+        status = "NEW";
     }
 
     public int getId() { return id; }
@@ -60,5 +62,13 @@ public class Car {
 
     public void setSellerID(int sellerID) {
         this.sellerID = sellerID;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

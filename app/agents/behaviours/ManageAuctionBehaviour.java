@@ -27,7 +27,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
     }
 
     public void onTick() {
-        //MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
+        MessageTemplate mt = MessageTemplate.MatchConversationId("car-auction");
         ACLMessage bid = myAgent.receive(mt);
         if (bid != null && bid.getPerformative() == ACLMessage.PROPOSE) {
             int proposedPrice = Integer.parseInt(bid.getContent());
@@ -56,6 +56,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
             acceptBid.addReceiver(standingBidBuyer);
             acceptBid.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice());
             myAgent.send(acceptBid);
+            informLosers();
             stop();
         } else {
             CallForBids(car);
@@ -84,5 +85,26 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
         }
         myAgent.send(cfp);
         mt = MessageTemplate.and(MessageTemplate.MatchConversationId("car-auction"),MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
+    }
+
+    private void informLosers(){
+        ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
+        inform.setConversationId("car-auction");
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("bidder");
+        template.addServices(sd);
+
+        try {
+            DFAgentDescription[] result = DFService.search(myAgent, template);
+            for (DFAgentDescription dfd : result) {
+                if(dfd.getName() != standingBidBuyer){
+                    inform.addReceiver(dfd.getName());
+                }
+            }
+        } catch (FIPAException fe) {
+            fe.printStackTrace();
+        }
+        myAgent.send(inform);
     }
 }

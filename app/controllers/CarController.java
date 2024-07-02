@@ -24,10 +24,18 @@ public class CarController {
     }
 
     public Result auction(int id) {
-        if (CarService.getInstance().auctionCar(id) == null) {
+        if (CarService.getInstance().getCar(id) == null) {
             return notFound(ApplicationUtil.createResponse("Car with id:" + id + " not found", false));
         }
         JsonNode jsonObjects = Json.toJson(CarService.getInstance().auctionCar(id));
+        return ok(ApplicationUtil.createResponse(jsonObjects, true));
+    }
+
+    public Result retrieve(int id) {
+        if (CarService.getInstance().getCar(id) == null) {
+            return notFound(ApplicationUtil.createResponse("Car with id:" + id + " not found", false));
+        }
+        JsonNode jsonObjects = Json.toJson(CarService.getInstance().getCar(id));
         return ok(ApplicationUtil.createResponse(jsonObjects, true));
     }
 }

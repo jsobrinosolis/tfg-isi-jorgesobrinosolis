@@ -103,10 +103,25 @@ DELETE  /user/:id                   controllers.UserController.delete(id:Int)
 POST    /car                       controllers.CarController.register(request:Request)
 
 ###
- #  summary: deletes a car
- #  responses:
- #    200:
- #      description: success
- #      content:application/json:
- ###
-DELETE     /car/:id                   controllers.CarController.auction(id:Int)
+#   summary: Starts auctioning a car identified by id
+#   responses:
+#       200:
+#           description: success
+#           content:
+#               application/json:
+#                   schema:
+#                       $ref: '#/definitions/entities.Car'
+###
+GET     /auction/car/:id                   controllers.CarController.auction(id:Int)
+
+###
+#   summary: Get a car identified by id
+#   responses:
+#       200:
+#           description: success
+#           content:
+#               application/json:
+#                   schema:
+#                       $ref: '#/definitions/entities.Car'
+###
+GET     /car/:id                   controllers.CarController.retrieve(id:Int)

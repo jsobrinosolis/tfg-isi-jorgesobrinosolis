@@ -1,6 +1,8 @@
 package services;
 
+import agents.AuctioneerAgent;
 import agents.BidderAgent;
+import agents.behaviours.ManageAuctionBehaviour;
 import agents.behaviours.RegisterCarBehaviour;
 import entities.Car;
 import entities.User;
@@ -35,13 +37,11 @@ public class CarService {
     }
 
     public Car auctionCar(int id){
-        JadeUtil.getAuctioneer().addBehaviour(new OneShotBehaviour() {
-            @Override
-            public void action() {
-                System.out.println("Prueba auctioneer desde CarService");
-            }
-        });
-
+        cars.get(id).setStatus("AUCTION");
+        AuctioneerAgent auctioneerAgent = JadeUtil.getAuctioneer();
+        auctioneerAgent.addBehaviour(new ManageAuctionBehaviour(auctioneerAgent, 5000, cars.get(id)));
         return cars.get(id);
     }
+
+    public Car getCar(int id) {return cars.get(id);}
 }

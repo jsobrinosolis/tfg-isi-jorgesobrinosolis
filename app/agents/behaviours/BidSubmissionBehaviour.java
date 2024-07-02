@@ -7,11 +7,11 @@ import jade.lang.acl.MessageTemplate;
 public class BidSubmissionBehaviour extends CyclicBehaviour {
 
     private static String[] message;
-    private int maxPrice;
+    private int userBudget;
     private MessageTemplate mt;
 
-    public BidSubmissionBehaviour(int maxPrice){
-        this.maxPrice = maxPrice;
+    public BidSubmissionBehaviour(int userBudget){
+        this.userBudget = userBudget;
     }
     public void action() {
         mt = MessageTemplate.MatchConversationId("car-auction");
@@ -22,8 +22,9 @@ public class BidSubmissionBehaviour extends CyclicBehaviour {
                 case ACLMessage.CFP:
                     ACLMessage reply = msg.createReply();
                     reply.setPerformative(ACLMessage.PROPOSE);
+                    reply.setConversationId("car-auction");
                     if (!message[3].equals(String.valueOf(myAgent.getAID()))) {
-                        if (Integer.parseInt(message[2]) <= maxPrice) {
+                        if (Integer.parseInt(message[2]) <= userBudget) {
                             System.out.println(myAgent.getLocalName() + " :" + message[0] + " " + message[1] + " at " + message[2]);
                             reply.setContent(String.valueOf(Integer.parseInt(message[2]) + 100));
                             myAgent.send(reply);
@@ -31,15 +32,12 @@ public class BidSubmissionBehaviour extends CyclicBehaviour {
                     }
                     break;
                 case ACLMessage.ACCEPT_PROPOSAL:
-                    // TODO Winning auction logic
-                    System.out.println(myAgent.getLocalName() + ": You won the auction!");
+                    System.out.println(myAgent.getLocalName() + ": won the auction!");
                     break;
                 case ACLMessage.INFORM:
-                    // TODO: Losing auction logic
                     System.out.println(myAgent.getLocalName() +": Auction ended, car was bought by another user.");
                     break;
                 default:
-                    // TODO: Error in auction logic
                     System.out.println("Error in auction.");
                     break;
             }

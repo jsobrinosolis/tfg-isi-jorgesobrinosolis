@@ -7,7 +7,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 
 public class BidderAgent extends Agent {
-    private static int maxPrice = 1500;
 
     protected void setup() {
         ServiceDescription sd = new ServiceDescription();
