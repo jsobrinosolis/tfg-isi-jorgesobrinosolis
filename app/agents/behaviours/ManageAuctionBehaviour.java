@@ -53,6 +53,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
         } else if (System.currentTimeMillis() - lastBidReceived > TIMEOUT){
             System.out.println("Auction ended, " + standingBidBuyer + " won.");
             ACLMessage acceptBid = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+            acceptBid.setConversationId("car-auction");
             acceptBid.addReceiver(standingBidBuyer);
             acceptBid.setContent(car.getBrand() + "," + car.getModel() + "," + car.getCurrentPrice());
             myAgent.send(acceptBid);
