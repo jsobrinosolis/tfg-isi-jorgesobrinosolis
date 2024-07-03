@@ -98,7 +98,7 @@ public class ManageAuctionBehaviour extends TickerBehaviour {
         try {
             DFAgentDescription[] result = DFService.search(myAgent, template);
             for (DFAgentDescription dfd : result) {
-                if(dfd.getName() != winner){
+                if(!dfd.getName().equals(winner)){
                     inform.addReceiver(dfd.getName());
                 }
             }

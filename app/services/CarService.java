@@ -6,9 +6,6 @@ import agents.behaviours.ManageAuctionBehaviour;
 import agents.behaviours.RegisterCarBehaviour;
 import entities.Car;
 import entities.User;
-import jade.core.behaviours.OneShotBehaviour;
-import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
 import utils.JadeUtil;
 
 import java.util.HashMap;
