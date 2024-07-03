@@ -44,13 +44,10 @@ public class RegisterCarBehaviour extends OneShotBehaviour {
         ACLMessage reply = myAgent.blockingReceive();
         if (reply != null) {
             if (reply.getPerformative() == ACLMessage.CONFIRM) {
-                System.out.println("Bidder: " + "Car registered!");
-                System.out.println(reply.getContent());
+                System.out.println(myAgent.getLocalName() + reply.getContent());
             } else {
                 System.out.println("Error: Failed to register car");
             }
-        } else {
-            System.out.println(reply);
         }
     }
 }

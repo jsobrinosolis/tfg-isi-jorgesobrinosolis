@@ -19,7 +19,7 @@ public class BidSubmissionBehaviour extends CyclicBehaviour {
         if (msg != null) {
             switch (msg.getPerformative()){
                 case ACLMessage.CFP:
-                    message = msg.getContent().split(","); //NOTA: para no implementar Serializable
+                    message = msg.getContent().split(",");
                     ACLMessage reply = msg.createReply();
                     reply.setPerformative(ACLMessage.PROPOSE);
                     reply.setConversationId("car-auction");

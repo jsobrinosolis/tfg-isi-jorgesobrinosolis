@@ -23,7 +23,6 @@ public class AuctioneerAgent extends Agent {
         register(sd);
         System.out.println("Agent " + getLocalName() + " started.");
         addBehaviour(new HandleCarRegistrationBehaviour());
-        //addBehaviour(new ManageAuctionBehaviour(this, 5000));
     }
 
     private class HandleCarRegistrationBehaviour extends CyclicBehaviour {
@@ -38,7 +37,7 @@ public class AuctioneerAgent extends Agent {
                 ACLMessage reply = request.createReply();
                 reply.setPerformative(ACLMessage.CONFIRM);
                 reply.setConversationId("register-car");
-                reply.setContent("Contenido reply: " + content[0] + " " + content[1] + " successfully registered for auction");
+                reply.setContent(content[0] + " " + content[1] + " successfully registered for auction");
                 myAgent.send(reply);
             } else {
                 block();
